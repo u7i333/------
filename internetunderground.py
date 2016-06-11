@@ -5,6 +5,7 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+import urllib
 
 conn = None
 server = "openAPI.seoul.go.kr:8088"
@@ -128,4 +129,49 @@ def extractTimeListdData(strXml):
            print("역코드 :",CD.text,"역이름:",NM.text)
            print("도착시간:",AT.text,"출발시간",LT.text,"시발역",SS.text,"종착역",SE.text)
            print("---------------------------------------------------------------------")
+           
+           
+           
+           
+           
+def OneURIBuilder(server,**user):
+    global Key
+    n = input("알고싶은 지하철 이름(역을 제외하고 입력해주세요 예:신도림 ):")
+    f = urllib.parse.quote(n)
+    str = "http://" + server + "/"+Key+"/xml/SearchInfoBySubwayNameService/1/5/"+f+"/"
+    return str           
+           
+def UndergroundOnesearch():
+    global server, Key, conn
+    if conn == None :
+        connectOpenAPIServer()
+    uri = OneURIBuilder(server)
+    conn.request("GET", uri)
+    
+    req = conn.getresponse()
+    
+    if int(req.status) == 200 :
+        print("Underground data downloading complete!")
+        return extractOneData(req.read())
+    else:
+        print ("OpenAPI request has been failed!! please retry")
+        return None
+        
+def extractOneData(strXml):
+    
+    from xml.etree import ElementTree
+    
+    tree = ElementTree.fromstring(strXml)
+    
+    itemElements = tree.getiterator("row")
+    for item in itemElements:
+        CD = item.find("STATION_CD")
+        NM = item.find("STATION_NM")
+        LN = item.find("LINE_NUM")
+        print("--------------------------------------------------------")
+        print(NM.text,"는",LN.text,"의 역이면 역코드는 ",CD.text,"입니다.")
+        print("--------------------------------------------------------")
+
+       
+           
            

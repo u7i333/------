@@ -5,6 +5,7 @@ def printMenu():
     print("\nWelcome! underground Program (xml version)")
     print("========Menu==========")
     print("전체적인 지하철 역 검색:  q")
+    print("개별 지하철 역 검색: w")
     print("메일보내기 (임시) : e")
     print("역코드로 열차시간 리스트 출력 = r")
     
@@ -20,7 +21,9 @@ def launcherFunction(menu):
         TimeList()
     elif menu == 'x':
         Quitprogram()
-        
+    elif menu == 'w':
+        UndergroundOnesearch()
+    
 def Quitprogram():
     global loopFlag
     loopFlag = 0
