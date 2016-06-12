@@ -14,6 +14,16 @@ Key = '507546756775376939356151527963'
 host = "smtp.gmail.com"
 port = "587"
 
+
+
+def connectOpenAPIServer():
+    global conn, server
+    conn = HTTPConnection(server)
+    
+
+
+#호선별 역검색
+
 def userURIBuilder(server,**user):
     global Key
     print("1~9: 1~9호선, I: 인천1호선, K: 경의중앙선, B: 분당선, A: 공항철도, G: 경춘선, S:신분당선, SU:수인선")
@@ -21,9 +31,6 @@ def userURIBuilder(server,**user):
     str = "http://" + server + "/"+Key+"/xml/SearchSTNBySubwayLineService/1/100/"+n+"/"
     return str
     
-def connectOpenAPIServer():
-    global conn, server
-    conn = HTTPConnection(server)
     
 def UndergroundAllsearch():
     global server, regKey, conn
@@ -31,22 +38,17 @@ def UndergroundAllsearch():
         connectOpenAPIServer()
     uri = userURIBuilder(server)
     conn.request("GET", uri)
-    
     req = conn.getresponse()
-    
     if int(req.status) == 200 :
-        print("Underground data downloading complete!")
+        print("지하철 데이터를 가져왔습니다")
         return extractUndergroundData(req.read())
     else:
-        print ("OpenAPI request has been failed!! please retry")
+        print ("실패했습니다. 다시 시도해보세요")
         return None
         
 def extractUndergroundData(strXml):
-    
     from xml.etree import ElementTree
-    
     tree = ElementTree.fromstring(strXml)
-    
     itemElements = tree.getiterator("row")
     for item in itemElements:
         CD = item.find("STATION_CD")
@@ -55,13 +57,16 @@ def extractUndergroundData(strXml):
            print("역코드 :",CD.text,"역이름:",NM.text)
            print("-------------------------------------")
            
+           
+# 메일보내기           
+           
 def SendMail():
     global host, port
     title = str(input ('메일 제목 :'))
     senderAddr = str(input ('보내는 메일 :'))
+    passwd = str(input ('비밀번호 입력 :'))
     recipientAddr = str(input ('받는 메일 :'))
     msgtext = str(input ('메일 내용 :'))
-    passwd = str(input ('비밀번호 입력 :'))
     
     msg = MIMEMultipart('alternative') 
     msg['Subject'] = title
@@ -81,6 +86,10 @@ def SendMail():
     
     print ("메일이 보내졌습니다!!")
     
+
+
+
+#지하철 시간표
     
 def timeURIBuilder(server,**user):
     global Key
@@ -104,18 +113,15 @@ def TimeList():
     req = conn.getresponse()
     
     if int(req.status) == 200 :
-        print("Underground data downloading complete!")
+        print("지하철 데이터를 가져왔습니다")
         return extractTimeListdData(req.read())
     else:
-        print ("OpenAPI request has been failed!! please retry")
+        print ("실패했습니다. 다시 시도해보세요")
         return None
         
 def extractTimeListdData(strXml):
-    
     from xml.etree import ElementTree
-    
     tree = ElementTree.fromstring(strXml)
-    
     itemElements = tree.getiterator("row")
     for item in itemElements:
         CD = item.find("STATION_CD")
@@ -132,7 +138,7 @@ def extractTimeListdData(strXml):
            
            
            
-           
+# 개별적인 지하철 검색           
            
 def OneURIBuilder(server,**user):
     global Key
@@ -147,22 +153,17 @@ def UndergroundOnesearch():
         connectOpenAPIServer()
     uri = OneURIBuilder(server)
     conn.request("GET", uri)
-    
     req = conn.getresponse()
-    
     if int(req.status) == 200 :
-        print("Underground data downloading complete!")
+        print("지하철 데이터를 가져왔습니다!")
         return extractOneData(req.read())
     else:
-        print ("OpenAPI request has been failed!! please retry")
+        print ("실패했습니다. 다시 시도해보세요")
         return None
         
 def extractOneData(strXml):
-    
     from xml.etree import ElementTree
-    
     tree = ElementTree.fromstring(strXml)
-    
     itemElements = tree.getiterator("row")
     for item in itemElements:
         CD = item.find("STATION_CD")
@@ -173,5 +174,68 @@ def extractOneData(strXml):
         print("--------------------------------------------------------")
 
        
+
+#지하철 위처검색
+
+
+def MapURIBuilder(server,**user):
+    global Key
+    #http://openAPI.seoul.go.kr:8088/(인증키)/xml/SearchLocationOfSTNByIDService/1/5/0335/
+    n = input("알고싶은 지하철 역코드:")
+    str = "http://" + server + "/"+Key+"/xml/SearchLocationOfSTNByIDService/1/5/"+n+"/"
+    return str 
+
+
            
-           
+def undergroundMap():
+    global server, Key, conn
+    if conn == None :
+        connectOpenAPIServer()
+    uri = MapURIBuilder(server)
+    conn.request("GET", uri)
+    
+    req = conn.getresponse()
+    
+    if int(req.status) == 200 :
+        print("지하철 데이터를 가져왔습니다")
+        return MapData(req.read())
+    else:
+        print ("실패했습니다. 다시 시도해보세요")
+        return None
+    
+        
+def MapData(strXml):
+    
+    from xml.etree import ElementTree
+    tree = ElementTree.fromstring(strXml)
+    itemElements = tree.getiterator("row")
+    for item in itemElements:
+        CD = item.find("STATION_CD")
+        NM = item.find("STATION_NM")
+        LB = item.find("LINE_NUM")
+        XW = item.find("XPOINT_WGS")
+        YW = item.find("YPOINT_WGS")
+    print(CD.text,"는",LB.text,"호선의",NM.text,"역입니다")
+    import webbrowser
+    url = "https://www.google.co.kr/maps/place/37%C2%B029'40.6%22N+127%C2%B003'49.1%22E/@"+XW.text+","+YW.text+",17z"
+    webbrowser.open_new(url)
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    

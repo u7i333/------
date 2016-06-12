@@ -4,10 +4,11 @@ from internetunderground import *
 def printMenu():
     print("\nWelcome! underground Program (xml version)")
     print("========Menu==========")
-    print("전체적인 지하철 역 검색:  q")
+    print("호선별 지하철 역 검색:  q")
     print("개별 지하철 역 검색: w")
     print("메일보내기 (임시) : e")
     print("역코드로 열차시간 리스트 출력 = r")
+    print("역코드로 지하철역 위치 조회 = t")
     
     print("프로그램 종료 x")
     
@@ -23,6 +24,8 @@ def launcherFunction(menu):
         Quitprogram()
     elif menu == 'w':
         UndergroundOnesearch()
+    elif menu == 't':
+        undergroundMap()
     
 def Quitprogram():
     global loopFlag
