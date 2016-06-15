@@ -4,7 +4,7 @@ from internetunderground import *
 def printMenu():
     print("\nWelcome! underground Program (xml version)")
     print("========Menu==========")
-    print("호선별 지하철 역코드 검색:  q")
+    print("호선별 지하철역 리스트 및 역코드 검색:  q")
     print("개별 지하철 역코드 검색: w")
     print("역코드로 열차시간 리스트 출력 = r")
     print("역코드로 지하철역 위치 조회 = t")

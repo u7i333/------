@@ -203,7 +203,7 @@ def extractOneData(strXml):
         NM = item.find("STATION_NM")
         LN = item.find("LINE_NUM")
         print("--------------------------------------------------------")
-        print(NM.text,"는",LN.text,"의 역이면 역코드는 ",CD.text,"입니다.")
+        print(NM.text,"는",LN.text,"호선의 역이면 역코드는 ",CD.text,"입니다.")
         print("--------------------------------------------------------")
         
 
@@ -253,7 +253,7 @@ def MapData(strXml):
         LB = item.find("LINE_NUM")
         XW = item.find("XPOINT_WGS")
         YW = item.find("YPOINT_WGS")
-    print(CD.text,"는",LB.text,"호선의",NM.text,"역입으로 X좌표는 ",XW.text,"이고 y좌표는 ",YW.text,"입니다.")
+    print(CD.text,"는",LB.text,"호선의",NM.text,"역으로 X좌표는 ",XW.text,"이고 y좌표는 ",YW.text,"입니다.")
     import webbrowser
     url = "https://www.google.co.kr/maps/place/37%C2%B029'40.6%22N+127%C2%B003'49.1%22E/@"+XW.text+","+YW.text+",19z"
     print("------------------------------------------------------------")
@@ -268,11 +268,12 @@ def MapData(strXml):
         
         
 def information():
+    print("========Menu==========")
     print("지하철역 주소와 전화번호 검색:  q")
     print("지하철 예술 무대 정보 검색: w")
     print("역코드로 지하철 주변 버스정류장 검색: e")
     print("역코드로 지하철 주변 주요시설 검색: r")
-    print("역별 지명유래 및 테마명(1~4호선만 됩니다. 재미있는것도있습니다. 한번쯤은 봐도 좋아요): t")
+    print("역별 지명유래 및 테마명(1~4호선만 됩니다. 한번쯤은 봐도 좋아요): t")
     
     menu = str(input ('메뉴를 선택해주세요 :'))
     

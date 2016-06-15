@@ -250,7 +250,7 @@ def ugimpData(strXml):
     n = input("위치를 검색해 보시겠습니까?(Y/N) = ")
     print("------------------------------------------------------------")    
     if n == 'y':
-        f = input("시설이름을 입력해주세요")
+        f = input("시설이름을 입력해주세요: ")
         n = urllib.parse.quote(f)
         url = "https://www.google.co.kr/maps/place/"+n+"/"
         webbrowser.open_new(url)   
